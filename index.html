@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J K Power Industry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .company-name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            letter-spacing: 3px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .pdf-container {
+            flex: 1;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            background: #ecf0f1;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: calc(100vh - 140px);
+            background: white;
+            overflow: hidden;
+            position: relative;
+            box-shadow: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none; /* Initially hide the iframe */
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #667eea;
+            font-size: 1.2rem;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            padding: 15px 0;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .company-name {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+            .pdf-viewer {
+                height: 70vh;
+                margin: 0 10px;
+            }
+            .header-content {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="company-name">J K Power Industry</h1>
+        </div>
+    </header>
+
+    <main class="pdf-container">
+        <div class="pdf-viewer" id="pdf-viewer">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Loading PDF...
+            </div>
+            </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 J K Power Industry. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Use the relative path to your PDF file.
+        // ENSURE this filename is an EXACT match (case-sensitive) to your file on disk.
+        const pdfFileName = 'JK_Power_Industry_Brochure_Gandhidham.pdf'; 
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const pdfViewer = document.getElementById('pdf-viewer');
+            
+            // Create a new iframe
+            const iframe = document.createElement('iframe');
+            iframe.className = 'pdf-iframe';
+            iframe.title = 'Company Profile - J K Power Industry';
+            
+            // Construct the URL to load the PDF using Google's PDF viewer.
+            // This is the key change to ensure the PDF displays properly.
+            // The `pdfFileName` is a relative path to your file.
+            const viewerUrl = `https://docs.google.com/gview?url=${window.location.origin}/${pdfFileName}&embedded=true`;
+            
+            // Set a fallback for local testing without a web server.
+            // If you are running this from a local file, the `window.location.origin` will be null.
+            const srcUrl = window.location.origin ? viewerUrl : pdfFileName;
+
+            // Show the loading spinner
+            loadingElement.style.display = 'block';
+
+            // Use the .onload event to hide the loader and show the iframe when the PDF is ready
+            iframe.onload = function() {
+                loadingElement.style.display = 'none';
+                iframe.style.display = 'block'; // Show the iframe after it has loaded
+            };
+            
+            // Set the iframe source
+            iframe.src = srcUrl;
+
+            pdfViewer.appendChild(iframe);
+        });
+    </script>
+</body>
+</html>
